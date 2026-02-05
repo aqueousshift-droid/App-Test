@@ -1,107 +1,232 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <title>Random Dare Game</title>
-  <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      padding: 20px; 
-      text-align: center; 
-      background: #000;   /* black background */
-      color: white;       /* default text color white */
-    }
+<meta charset="UTF-8">
+<title>Парти Игра</title>
 
-    h1 {
-      color: white;
-    }
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 50px;
+  }
 
-    #text { 
-      font-size: 22px; 
-      margin: 20px 0; 
-      min-height: 60px; 
-    }
+  #difficultyBar {
+    font-size: 20px;
+    margin-top: 5px;
+    min-height: 24px;
+  }
 
-    .loading {
-      color: gray; /* gray loading text */
-    }
+  button {
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+  }
 
-    button { 
-      padding: 12px 25px; 
-      font-size: 16px; 
-      cursor: pointer; 
-      margin: 5px; 
-      background-color: #222;
-      color: white;
-      border: 1px solid white;
-      border-radius: 5px;
-    }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
-    button:hover {
-      background-color: #444;
-    }
-  </style>
+  input, textarea {
+    font-size: 18px;
+    padding: 8px;
+    margin: 5px;
+    text-align: center;
+  }
+
+  textarea {
+    width: 60%;
+    height: 80px;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+</style>
 </head>
 <body>
 
-<h1>Random Dare Game</h1>
-<div id="text">Натисни бутона, за да започнеш!</div>
-<button onclick="showRandomText()">Следващо</button>
+<h1>Парти Игра</h1>
 
-<script>
-const texts = [
-  "Пусни флиртово гласово съобщение на бивш/а или на друг приятел.",
-  "Оближи фъстъчено масло, бита сметана или шоколадов сос от пръстта на човека в дясно.",
-  "Имитирай, че имаш на оргазъм за една минута.",
-  "Играй „Върти бутилката“ и целуни човека, когото избере бутилката.",
-  "Направи любимата си секс поза с човека отляво.",
-  "Преструвай се, че правиш орален секс на бутилка за 60 секунди.",
-  "Ако има басейн или джакузи – влезте да плувате голи.",
-  "Дръж се за ръка с човека, когото познаваш най-малко в групата, за една минута.",
-  "Изпрати секси селфи на някого от контактите си.",
-  "Направи „body shot“ – балансирай чашата креативно върху тялото си.",
-  "Ако сте на плаж или край басейн – нарисувай хорни изображение със слънцезащитен крем върху приятел.",
-  "Размени бельото си с човека отдясно.(ако сте с бельо) ",
-  "Отговори на публикация или сторито на някого със секси емоджи.",
-  "Прехвърли кубче лед от устата си в устата на друг човек.(Ако няма кубче, нещо друго)",
-  "Направи лап денс на човек по твой избор от групата за 1 минута. Ако си момче, танцът трябва да е прав (без сядане).",
-  "Свали една дреха от горната част на тялото. Ако нямате вече, може да продължите!",
-  "Направи снимка на половата част(или гърди за момиче) и я покажи на човека отдясно.",
-  "Туърквай 30 секунди, където и да се намирате.",
-  "Изтичай изцяло гол на улицата два пъти.",
-  "Махни всичките си дрехи без бельото.",
-  "Остани изцяло гол за 5 минути.(без бельо)",
-  "Лапай крака за 1 минута на човека отдясно.",
-  "Целуни три пъти половата част или гърдите на човека пред теб директно (не през дреха).",
-  "Разиграй сексуална фантазия по твой избор с друг човек от групата.",
-  "Направи масаж на краката на човека отдясно за една минута.",
-  "Плесни втория човек вляво – ако е момиче, по гъза( 3 пъти); ако е момче – по лицето.(5 пъти силно)",
-  "!!!Направи „турска чекия“ с третия човек вляво.!!!",
-  "Направи смучка на човека пред тебе - вие решавате мястото",
-  "Сложи ръка под блузата на човека отляво (над бельото) за 30 секунди.",
-  "Подай пръст на човека срещу теб и го накарай да те „цунка“ по него за 10 секунди.",
-  "Направете двойна усмивка – двама души стоят близо и се усмихват секси един на друг за 20 секунди.",
-  "Предай някаква храна с човека вдясно от уста към уста, като устите ви се допират."
-];
+<!-- WELCOME SCREEN -->
+<div id="welcomeScreen">
+  <p>
+    Това е отборна игра.<br>
+    Ще се редувате, но ще действате като един отбор.<br>
+    Не можете да се откажете, след като започнете играта, иначе ще има последствия.<br>
+    Минималният брой играчи е 2.<br>
+    Ние ви наблюдаваме.
+  </p>
+  <button onclick="goToNames()">Продължи</button>
+</div>
 
-function showRandomText() {
-  const textDiv = document.getElementById('text');
-  let dots = "";
-  
-  textDiv.classList.add("loading");
+<!-- NAME SCREEN -->
+<div id="nameScreen" class="hidden">
+  <p>
+    Играта започна.<br>
+    Нямате право да се върнете назад.<br><br>
+    Въведете имената на участниците.
+  </p>
+
+  <div id="playersContainer">
+    <input type="text" placeholder="Играч 1">
+    <input type="text" placeholder="Играч 2">
+  </div>
+
+  <br>
+  <button onclick="addPlayer()">Добави още играч</button>
+  <button onclick="goToPrize()">Продължи</button>
+</div>
+
+<!-- PRIZE SCREEN -->
+<div id="prizeScreen" class="hidden">
+  <p>
+    Напишете каква награда искате да получите,
+    ако успешно изпълните предизвикателствата.
+  </p>
+
+  <textarea id="prizeInput" placeholder="Напишете наградата тук..."></textarea>
+  <br>
+  <button onclick="startGame()">Започни играта</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="hidden">
+  <p id="gameText"></p>
+  <p id="difficultyBar"></p>
+
+  <button id="nextButton" onclick="generateText()">Следващо предизвикателство</button>
+  <button id="shotButton" onclick="drinkShot()">Пий шот</button>
+</div>
+
+<script> const texts = [ { text: "Пусни флиртово гласово съобщение на бивш/а или на друг приятел.", level: 4 }, { text: "Оближи фъстъчено масло, бита сметана или шоколадов сос от пръстта на човека в дясно.", level: 4 }, { text: "Имитирай, че имаш оргазъм за една минута.", level: 6 }, { text: "Играй „Върти бутилката“ и целуни човека, когото избере бутилката.", level: 5 }, { text: "Направи любимата си секс поза с човека отляво.", level: 7 }, { text: "Преструвай се, че правиш орален секс на бутилка за 60 секунди.", level: 7 }, { text: "Ако има басейн или джакузи – влезте да плувате голи.", level: 6 }, { text: "Дръж се за ръка с човека, когото познаваш най-малко в групата, за една минута.", level: 3 }, { text: "Изпрати секси селфи на някого от контактите си.", level: 5 }, { text: "Направи „body shot“ – балансирай чашата креативно върху тялото си.", level: 5 }, { text: "Ако сте на плаж или край басейн – нарисувай хорни изображение със слънцезащитен крем върху приятел.", level: 3 }, { text: "Размени бельото си с човека отдясно.(ако сте с бельо)", level: 8 }, { text: "Отговори на публикация или сторито на някого със секси емоджи.", level: 4 }, { text: "Прехвърли кубче лед от устата си в устата на друг човек.(Ако няма кубче, нещо друго)", level: 7 }, { text: "Направи лап денс на човек по твой избор от групата за 1 минута. Ако си момче, танцът трябва да е прав (без сядане).", level: 8 }, { text: "Свали една дреха от горната част на тялото. Ако нямате вече, може да продължите!", level: 8 }, { text: "Направи снимка на половата част(или гърди за момиче) и я покажи на човека отдясно.", level: 9 }, { text: "Туърквай 30 секунди, където и да се намирате.", level: 6 }, { text: "Изтичай изцяло гол на улицата два пъти.", level: 10 }, { text: "Махни всичките си дрехи без бельото.", level: 9 }, { text: "Остани изцяло гол за 5 минути.(без бельо)", level: 10 }, { text: "Лапай крака за 1 минута на човека отдясно.", level: 9 }, { text: "Френска целувка с човека пред тебе за 2 минути", level: 8 }, { text: "Целуни три пъти половата част или гърдите на човека пред теб директно (не през дреха).", level: 9 }, { text: "Разиграй сексуална фантазия по твой избор с друг човек от групата.", level: 9 }, { text: "Направи масаж на краката на човека отдясно за една минута.", level: 5 }, { text: "Плесни втория човек вляво – ако е момиче, по гъза(3 пъти); ако е момче – по лицето.(5 пъти силно)", level: 6 }, { text: "!!!Направи „турска чекия“ с третия човек вляво.!!!", level: 10 }, { text: "Направи смучка на човека пред тебе - вие решавате мястото", level: 10 }, { text: "Човека вдясно трябва да те наплюе в лицето 3 пъти и трябва да го оставиш без да го пипаш за 3 мин", level: 9 }, { text: "Сложи ръка под блузата на човека отляво (над бельото) за 30 секунди.", level: 9 }, { text: "Наречи човека вляво със сексуални имена докато си клекнал пред него 5 пъти", level: 7 }, { text: "Накарай човека пред тебе да ти покаже пръст и ти трябва да го целунеш 10 пъти.", level: 6 }, { text: "Направете двойна усмивка – двама души стоят близо и се усмихват секси един на друг за 20 секунди.", level: 6 }, { text: "Предай някаква храна с човека вдясно от уста към уста, като устите ви се допират.", level: 7 } ];
+
+let isLoading = false;
+let consecutiveShots = 0;
+let playerCount = 2;
+let players = [];
+
+function goToNames() {
+  document.getElementById("welcomeScreen").classList.add("hidden");
+  document.getElementById("nameScreen").classList.remove("hidden");
+}
+
+function addPlayer() {
+  playerCount++;
+  const container = document.getElementById("playersContainer");
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "Играч " + playerCount;
+
+  container.appendChild(document.createElement("br"));
+  container.appendChild(input);
+}
+
+function goToPrize() {
+  const inputs = document.querySelectorAll("#playersContainer input");
+  players = [];
+
+  inputs.forEach(input => {
+    if (input.value.trim() !== "") {
+      players.push(input.value.trim());
+    }
+  });
+
+  if (players.length < 2) {
+    alert("Минималният брой играчи е 2.");
+    return;
+  }
+
+  document.getElementById("nameScreen").classList.add("hidden");
+  document.getElementById("prizeScreen").classList.remove("hidden");
+}
+
+function startGame() {
+  const prizeText = document.getElementById("prizeInput").value.trim();
+
+  if (prizeText === "") {
+    alert("Трябва да напишете награда.");
+    return;
+  }
+
+  document.getElementById("prizeScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+
+  document.getElementById("gameText").innerText =
+    "Играта започна. Участници: " + players.join(", ");
+}
+
+function showChallenge(isShot = false) {
+  if (isLoading) return;
+  isLoading = true;
+
+  const outputText = document.getElementById("gameText");
+  const difficultyBar = document.getElementById("difficultyBar");
+  const shotButton = document.getElementById("shotButton");
+
+  outputText.style.color = "gray";
+  difficultyBar.style.color = "gray";
+
+  let dots = ".";
+  outputText.innerText = dots;
+  difficultyBar.innerText = dots;
 
   const interval = setInterval(() => {
-    dots = dots.length < 3 ? dots + "." : "";
-    textDiv.innerText = "Зареждане" + dots;
-  }, 300);
+    dots = dots.length < 3 ? dots + "." : ".";
+    outputText.innerText = dots;
+    difficultyBar.innerText = dots;
+  }, 400);
 
   setTimeout(() => {
     clearInterval(interval);
+
     const randomIndex = Math.floor(Math.random() * texts.length);
-    textDiv.innerText = texts[randomIndex];
-    textDiv.classList.remove("loading");
+    const selected = texts[randomIndex];
+
+    outputText.style.color = "white";
+    outputText.innerText = selected.text;
+
+    difficultyBar.innerText = "Трудност: " + selected.level;
+
+    if (selected.level <= 3) difficultyBar.style.color = "green";
+    else if (selected.level <= 7) difficultyBar.style.color = "orange";
+    else difficultyBar.style.color = "red";
+
+    if (!isShot) {
+      consecutiveShots = 0;
+      shotButton.disabled = false;
+    }
+
+    isLoading = false;
   }, 2000);
 }
+
+function generateText() {
+  showChallenge(false);
+}
+
+function drinkShot() {
+  if (isLoading) return;
+
+  if (consecutiveShots >= 2) {
+    alert("Не можеш да пиеш повече от два шота поред.");
+    return;
+  }
+
+  consecutiveShots++;
+  showChallenge(true);
+
+  if (consecutiveShots >= 2) {
+    document.getElementById("shotButton").disabled = true;
+  }
+}
+
 </script>
 
 </body>
